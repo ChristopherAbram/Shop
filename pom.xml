@@ -4,4 +4,17 @@
   <artifactId>Java-Shop-Project</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>Shop Project</name>
+  <dependencies>
+  	<dependency>
+  		<groupId>com.hynnet</groupId>
+  		<artifactId>oracle-driver-ojdbc6</artifactId>
+  		<version>12.1.0.1</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>junit</groupId>
+  		<artifactId>junit</artifactId>
+  		<version>4.12</version>
+  		<scope>test</scope>
+  	</dependency>
+  </dependencies>
 </project>
