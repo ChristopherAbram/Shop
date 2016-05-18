@@ -15,7 +15,8 @@ public class Main {
 	public static void main(String[] args) {
 		
 		Admin admin = new Admin(1);
-		mprintln(admin.data.first_name, "");
+		mprintln(admin.data.first_name, admin.data.second_name, "");
+		
 		
 		
 		Function f = new Function(3);
