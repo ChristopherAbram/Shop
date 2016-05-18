@@ -18,7 +18,6 @@ public class Main {
 		mprintln(admin.data.first_name, admin.data.second_name, "");
 		
 		
-		
 		Function f = new Function(3);
 		mprintln(f.data.id, 
 				f.data.function_name, 
