@@ -1,7 +1,9 @@
 package pl.edu.pk.shop;
 
+import pl.edu.pk.shop.tabledata.*;
 import pl.edu.pk.shop.address.*;
 import pl.edu.pk.shop.function.*;
+import pl.edu.pk.shop.user.*;
 import static pl.edu.pk.shop.staticfunctions.Functions.*;
 
 public class Main {
@@ -11,6 +13,10 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		
+		Admin admin = new Admin(1);
+		mprintln(admin.data.first_name, "");
+		
 		
 		Function f = new Function(3);
 		mprintln(f.data.id, 
