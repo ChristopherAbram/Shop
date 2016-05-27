@@ -1,9 +1,10 @@
 package pl.edu.pk.shop;
 
-import pl.edu.pk.shop.tabledata.*;
-import pl.edu.pk.shop.address.*;
-import pl.edu.pk.shop.function.*;
-import pl.edu.pk.shop.user.*;
+import java.util.*;
+import pl.edu.pk.shop.elements.tabledata.*;
+import pl.edu.pk.shop.elements.address.*;
+import pl.edu.pk.shop.elements.function.*;
+import pl.edu.pk.shop.elements.user.*;
 import static pl.edu.pk.shop.staticfunctions.Functions.*;
 
 public class Main {
@@ -14,14 +15,16 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		
-		Admin admin = new Admin(1);
+		/*Admin admin = new Admin(1);
 		mprintln(admin.data.first_name, admin.data.second_name, "");
-		
+		*/
 		
 		Function f = new Function(3);
 		mprintln(f.data.id, 
 				f.data.function_name, 
 				f.data.access_level);
+		
+		//Function g = new Function(f);
 		
 		// Creating new address:
 		Address address = new Address(1);
@@ -31,6 +34,21 @@ public class Main {
 				address.data.cityname, 
 				address.data.zipcode);
 		
+		Address address1 = address.clone();
+		address1.data.street = "Jakas inna ulica...";
+		address1.data.cityname = "Inna ulica";
+		
+		mprintln("", address1.data.id, 
+				address1.data.street, 
+				address1.data.flatnumber, 
+				address1.data.cityname, 
+				address1.data.zipcode);
+		
+		mprintln("",address.data.id, 
+				address.data.street, 
+				address.data.flatnumber, 
+				address.data.cityname, 
+				address.data.zipcode);
 		
 		/*address.data.delete();
 		
@@ -57,23 +75,6 @@ public class Main {
 		data.cityname = "Kraków";
 		data.zipcode = "10-345";
 		data.insert();*/
-		
-		/*try {
-			Database db = Database.getInstance();
-			db.connect();
-			
-			db.query("SELECT id, itemname FROM item WHERE id > ? AND itemname NOT LIKE ? ORDER BY itemname ASC");
-			db.prepare(5, "KITCHEN AMICA 58CE3.413HTaKDpQ ( Xx )");
-			
-			db.execute();
-			Results r = db.getResults();
-			while(r.hasNext()){
-				Results.Row row = r.next();
-				System.out.println(row.get("id") + "    " + row.get("itemname"));
-			}
-		} catch (DatabaseException dbe){
-			System.out.println(dbe.getMessage()); 
-		}*/
 	}// end main
 	
 	static public void getName(Object[] v){
