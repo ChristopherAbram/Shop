@@ -1,11 +1,12 @@
-package pl.edu.pk.shop.user;
+package pl.edu.pk.shop.elements.user;
 
 import java.util.HashMap;
+import java.util.ListIterator;
 
 import pl.edu.pk.shop.database.*;
-import pl.edu.pk.shop.tabledata.TableData;
-import pl.edu.pk.shop.function.*;
-import pl.edu.pk.shop.address.*;
+import pl.edu.pk.shop.elements.address.Address;
+import pl.edu.pk.shop.elements.function.Function;
+import pl.edu.pk.shop.elements.tabledata.TableData;
 
 /**Stores user's data.
  * @author Christopher Abram
@@ -24,6 +25,11 @@ public class UserData implements TableData {
 	// } methods {
 		
 		public UserData(){}
+		
+		public UserData(UserData ob){
+			this.id = ob.id;
+			// TODO: finish coping...
+		}// end UserData
 		
 		public UserData(int ID){
 			if(ID > -1){
@@ -45,8 +51,9 @@ public class UserData implements TableData {
 			if(db.execute()){
 				try {
 					Results res = db.getResults();
-					if(res.hasNext()){
-						Results.Row row = res.next();
+					ListIterator<Results.Row> iter = res.listIterator();
+					if(iter.hasNext()){
+						Results.Row row = iter.next();
 						id = Integer.parseInt(row.get("id"));
 						first_name = row.get("first_name");
 						second_name = row.get("second_name");
@@ -124,6 +131,14 @@ public class UserData implements TableData {
 			
 			return map;
 		}// end getAsHashMap
+		
+		/** Makes deep copy of object.
+		 * @author Christopher Abram
+		 * @return UserData - copy of object
+		 **/
+		public UserData clone(){
+			return new UserData(this);
+		}// end clone
 		
 	// }
 }
