@@ -17,6 +17,7 @@ public class Main {
 				f.data.function_name, 
 				f.data.access_level);
 		
+		// Comments:
 		// Creating new address:
 		Address address = new Address(1);
 		mprintln(address.data.id, 
