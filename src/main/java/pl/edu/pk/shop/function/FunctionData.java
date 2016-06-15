@@ -47,7 +47,7 @@ public class FunctionData implements TableData {
 							return true;
 						}
 					} catch(DatabaseException dbe){
-						System.out.println("Warning: Unable to load function instance.");
+						System.out.println("Error: " + dbe.getMessage());
 					}
 				}
 				return false;
@@ -58,12 +58,17 @@ public class FunctionData implements TableData {
 			 * @return boolean - true if update properly, false otherwise.
 			 */
 			public boolean update(){
-				Database db = Database.getInstance();
-				db.connect();
-				db.query("UPDATE function SET function_name = ?, access_level = ? WHERE id = ?");
-				db.prepare(function_name, access_level, id);
-				if(db.execute())
-					return true;
+				try{
+									
+					Database db = Database.getInstance();
+					db.connect();
+					db.query("UPDATE function SET function_name = ?, access_level = ? WHERE id = ?");
+					db.prepare(function_name, access_level, id);
+					if(db.execute())
+						return true;
+				} catch(DatabaseException dbe){
+					System.out.println("Error: " + dbe.getMessage());
+				}
 				return false;
 			}
 			
@@ -72,12 +77,16 @@ public class FunctionData implements TableData {
 			 * @return boolean - true if insert properly, false otherwise.
 			 */
 			public boolean insert(){
-				Database db = Database.getInstance();
-				db.connect();
-				db.query("INSERT INTO function(id, function_name, access_level) VALUES (?, ?, ?)");
-				db.prepare(id, function_name, access_level);
-				if(db.execute())
-					return true;
+				try{
+					Database db = Database.getInstance();
+					db.connect();
+					db.query("INSERT INTO function(id, function_name, access_level) VALUES (?, ?, ?)");
+					db.prepare(id, function_name, access_level);
+					if(db.execute())
+						return true;
+				} catch(DatabaseException dbe) {
+					System.out.println("Error: " + dbe.getMessage());
+				}
 				return false;
 			}
 			
@@ -86,12 +95,17 @@ public class FunctionData implements TableData {
 			 * @return boolean - true if delete properly, false otherwise.
 			 */
 			public boolean delete(){
-				Database db = Database.getInstance();
-				db.connect();
-				db.query("DELETE FROM function WHERE id = ?");
-				db.prepare(id);
-				if(db.execute())
-					return true;
+				try{
+					Database db = Database.getInstance();
+					db.connect();
+					db.query("DELETE FROM function WHERE id = ?");
+					db.prepare(id);
+					if(db.execute())
+						return true;
+				} catch(DatabaseException dbe) {
+					System.out.println("Error: " + dbe.getMessage());
+				}
+		
 				return false;
 			}
 			

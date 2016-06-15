@@ -16,6 +16,9 @@ public class Function {
 				data = new FunctionData(ID);
 			}// end Function
 			
+			public int getId() {
+				return data.id;
+			}
 		// } protected {
 			
 		// } private {

@@ -10,10 +10,12 @@ public abstract class User {
 	// vars {
 		
 		public UserData data = null;
+		
+		// czy to aby jest ok?
 		protected String _sqlByID = 
 				"SELECT " +
 				"id, type, name, surname, age " +
-				"FROM user " +
+				"FROM users " +
 				"WHERE id = ? " +
 				"FETCH FIRST 1 ROW ONLY";
 		
@@ -37,7 +39,7 @@ public abstract class User {
 				int id = -1;
 				Database db = Database.getInstance();
 				db.connect();
-				db.query("SELECT id FROM user WHERE email = ? AND password = ? FETCH FIRST 1 ROW ONLY");
+				db.query("SELECT id FROM users WHERE email = ? AND password = ? FETCH FIRST 1 ROW ONLY");
 				db.prepare(new Object[]{login, password});
 				
 				db.execute();

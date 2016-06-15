@@ -2,6 +2,7 @@ package pl.edu.pk.shop;
 
 import pl.edu.pk.shop.address.*;
 import pl.edu.pk.shop.function.*;
+import pl.edu.pk.shop.user.*;
 import static pl.edu.pk.shop.staticfunctions.Functions.*;
 
 public class Main {
@@ -17,8 +18,14 @@ public class Main {
 				f.data.function_name, 
 				f.data.access_level);
 		
+		UserData u = new UserData(2);
+		
+		mprintln(u.id, 
+				u.first_name, 
+				u.second_name);
+		
 		// Creating new address:
-		Address address = new Address(1);
+		Address address = new Address(2);
 		mprintln(address.data.id, 
 				address.data.street, 
 				address.data.flatnumber, 
