@@ -15,7 +15,10 @@ public class Address {
 			public Address(int ID){
 				data = new AddressData(ID);
 			}
-	
+			
+			public int getId() {
+				return data.id;
+			}
 		// } protected {
 				
 		// } private {

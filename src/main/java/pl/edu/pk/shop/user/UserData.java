@@ -33,57 +33,100 @@ public class UserData implements TableData {
 		}// end UserData
 		
 		/**Loads all information from SQL Server.
-		 * @author Christopher Abram
+		 * @author Daria G (update)
 		 * @param int id - identifier of user.
 		 * @return void
 		 */
 		public boolean load(){
 			Database db = Database.getInstance();
 			db.connect();
-			db.query("SELECT id, ... FROM user WHERE id = ?");
+			db.query("SELECT id, first_name, second_name, id_function, id_address, email, phonenumber FROM users WHERE id = ?");
 			db.prepare(id);
 			if(db.execute()){
 				try {
+					// update: Daria G
+					Results res = db.getResults();
+					if(res.hasNext()){
+						Results.Row row = res.next();
+						id = Integer.parseInt(row.get("id"));
+						first_name = row.get("first_name");
+						second_name = row.get("second_name");
+						function = new Function(Integer.parseInt(row.get("id_function"))); //?
+						int id_address = Integer.parseInt(row.get("id_address"));
+						address = new Address(id_address);
+						email = row.get("email");
+						phonenumber = row.get("phonenumber");
+						
+						return true;
+					}
 					
-					
-					return true;
 				} catch(DatabaseException dbe){
-					// ...
+					System.out.println("Error: " + dbe.getMessage());
 				}
 			}
 			return false;
 		}// end load
 		
 		/**Updates all information in SQL Server using UPDATE query.
-		 * @author Christopher Abram
+		 * @author Daria G
 		 * @return boolean - true if update properly, false otherwise.
 		 */
 		public boolean update(){
 			
-			return false;
-		}
+			try{
+				Database db = Database.getInstance();
+				db.connect();
+				db.query("UPDATE users SET first_name = ?, second_name = ?, id_function = ?, id_addres = ?, email = ?, phonenumber = ? WHERE id = ?");
+				db.prepare(first_name, second_name, function.getId(), address.getId(), email, phonenumber, id);
+				if(db.execute())
+					return true;
+			} catch(DatabaseException dbe) {
+				System.out.println("Error: " + dbe.getMessage());
+			}
+				return false;
+		}// end update
+		
 		
 		/**Inserts row information to SQL Server using INSERT query.
-		 * @author Christopher Abram
+		 * @author Daria G
 		 * @return boolean - true if insert properly, false otherwise.
 		 */
 		public boolean insert(){
+			try{
+				Database db = Database.getInstance();
+				db.connect();
+				db.query("INSERT INTO users(id, first_name, second_name, id_function, id_address, email, phonenumber) VALUES (?, ?, ?, ?, ?, ?, ?)");
+				db.prepare(id, first_name, second_name, function.getId(), address.getId(), email, phonenumber);
+				if(db.execute())
+					return true;
+			} catch(DatabaseException dbe) {
+				System.out.println("Error: " + dbe.getMessage());
+			}
+				return false;
 			
-			return false;
-		}
+		}// end insert
 		
 		/**Delete row in table using DELETE query.
-		 * @author Christopher Abram
+		 * @author Daria G
 		 * @return boolean - true if delete properly, false otherwise.
 		 */
 		public boolean delete(){
-			
-			return false;
-		}
+			try{
+				Database db = Database.getInstance();
+				db.connect();
+				db.query("DELETE FROM users WHERE id = ?");
+				db.prepare(id);
+				if(db.execute())
+					return true;
+			} catch(DatabaseException dbe) {
+				System.out.println("Error: " + dbe.getMessage());
+			}
+				return false;
+		}// end delete
 		
 		/**Gets all UserData properties as HashMap.
 		 * Keys name are the same as properties names.
-		 * @author Christopher Abram
+		 * @author Daria G
 		 * @return HashMap<String, Object> - UserData as HashMap
 		 * @see java.util.HashMap
 		 */
@@ -93,8 +136,8 @@ public class UserData implements TableData {
 			map.put("id", id);
 			map.put("first_name", first_name);
 			map.put("second_name", second_name);
-			//map.put("function", function);
-			//map.put("address", address);
+			map.put("id_function", function.getId()); 
+			map.put("id_address", address.getId());
 			map.put("email", email);
 			map.put("phonenumber", phonenumber);
 			

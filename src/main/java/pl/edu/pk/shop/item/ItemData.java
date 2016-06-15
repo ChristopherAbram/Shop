@@ -37,7 +37,20 @@ public class ItemData implements TableData {
 				db.query("SELECT id, itemname, itdescription, itemprice, quantity, id_category FROM item WHERE id = ?");
 				db.prepare(id);
 				if(db.execute()){
-					
+					try {
+						Results res = db.getResults();
+						if(res.hasNext()){
+							Results.Row row = res.next();
+							id = Integer.parseInt(row.get("id"));
+							itemname = row.get("itemname");
+							itdescription = row.get("itdescription");
+							itemprice = Float.parseFloat(row.get("itemprice"));
+							quantity = Integer.parseInt(row.get("quantity"));
+							category_id = Integer.parseInt(row.get("id_category"));
+						}
+					} catch(DatabaseException dbe){
+						System.out.println("Warning: Unable to load item instance.");
+					}
 				}
 				return false;
 			}// end load
@@ -47,24 +60,44 @@ public class ItemData implements TableData {
 			 * @return boolean - true if update properly, false otherwise.
 			 */
 			public boolean update(){
+				Database db = Database.getInstance().connect();
+				db.query("UPDATE item SET itemname = ?, itdescription = ?, itemprice = ?, quantity = ?, id_category = ? WHERE id = ?");
+				db.prepare(itemname, itdescription, itemprice, quantity, category_id, id);
+				if(db.execute())
+					return true;
+					
 				return false;
-			}
+			}// end update
 			
 			/**Inserts row information to SQL Server using INSERT query.
 			 * @author Christopher Abram
 			 * @return boolean - true if insert properly, false otherwise.
 			 */
 			public boolean insert(){
+				Database db = Database.getInstance().connect();
+				db.query("INSERT INTO item(id, itemname, itdescription, itemprice, quantity, id_category) VALUES (?, ?, ?, ?, ?, ?)");
+				db.prepare(itemname, itdescription, itemprice, quantity, category_id, id);
+				if(db.execute())
+					return true;
+				
 				return false;
-			}
+			}// end insert
 			
 			/**Delete row in table using DELETE query.
 			 * @author Christopher Abram
 			 * @return boolean - true if delete properly, false otherwise.
 			 */
 			public boolean delete(){
+				
+				Database db = Database.getInstance();
+				db.connect();
+				db.query("DELETE FROM item WHERE id = ?");
+				db.prepare(id);
+				if(db.execute())
+					return true;
+				
 				return false;
-			}
+			} // end delete
 			
 			/**Gets all ItemData properties as HashMap.
 			 * Keys name are the same as properties names.
@@ -75,8 +108,14 @@ public class ItemData implements TableData {
 			public HashMap<String, Object> getAsHashMap(){
 				HashMap<String, Object> map = new HashMap<String, Object>();
 				
+				// TODO: finish initialization of map 
+				// done by:  Daria G
 				map.put("id", id);
-				// TODO: finish initialization of map
+				map.put("itemname", itemname);
+				map.put("itdescription", itdescription);
+				map.put("itemprice", itemprice);
+				map.put("quantity", quantity);
+				map.put("id_category", category_id);
 				
 				return map;
 			}// end getAsHashMap

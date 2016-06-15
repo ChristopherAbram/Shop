@@ -51,7 +51,7 @@ public class AddressData implements TableData {
 							return true;
 						}
 					} catch(DatabaseException dbe){
-						System.out.println("Warning: Unable to load address instance.");
+						System.out.println("Error: " + dbe.getMessage());
 					}
 				}
 				return false;
@@ -62,12 +62,16 @@ public class AddressData implements TableData {
 			 * @return boolean - true if update properly, false otherwise.
 			 */
 			public boolean update(){
+			try{
 				Database db = Database.getInstance();
 				db.connect();
 				db.query("UPDATE address SET street = ?, flatnumber = ?, cityname = ?, zipcode = ? WHERE id = ?");
 				db.prepare(street, flatnumber, cityname, zipcode, id);
 				if(db.execute())
 					return true;
+			} catch(DatabaseException dbe) {
+				System.out.println("Error: " + dbe.getMessage());
+			}
 				return false;
 			}// end update
 			
@@ -76,13 +80,18 @@ public class AddressData implements TableData {
 			 * @return boolean - true if insert properly, false otherwise.
 			 */
 			public boolean insert(){
+			try{
 				Database db = Database.getInstance();
 				db.connect();
 				db.query("INSERT INTO address(id, street, flatnumber, cityname, zipcode) VALUES (?, ?, ?, ?, ?)");
 				db.prepare(id, street, flatnumber, cityname, zipcode);
 				if(db.execute())
 					return true;
+			} catch(DatabaseException dbe) {
+				System.out.println("Error: " + dbe.getMessage());
+			}
 				return false;
+			
 			}// end insert
 			
 			/**Delete row in table using DELETE query.
@@ -90,12 +99,16 @@ public class AddressData implements TableData {
 			 * @return boolean - true if delete properly, false otherwise.
 			 */
 			public boolean delete(){
+			try{
 				Database db = Database.getInstance();
 				db.connect();
 				db.query("DELETE FROM address WHERE id = ?");
 				db.prepare(id);
 				if(db.execute())
 					return true;
+			} catch(DatabaseException dbe) {
+				System.out.println("Error: " + dbe.getMessage());
+			}
 				return false;
 			}// end delete
 			
