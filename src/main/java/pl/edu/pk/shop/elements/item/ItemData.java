@@ -1,7 +1,11 @@
 package pl.edu.pk.shop.elements.item;
 
+import pl.edu.pk.shop.database.Database;
+import pl.edu.pk.shop.database.DatabaseException;
+import pl.edu.pk.shop.database.Results;
 import pl.edu.pk.shop.elements.tabledata.TableData;
 import java.util.HashMap;
+import java.util.ListIterator;
 
 public class ItemData implements TableData {
 	// vars {
@@ -12,7 +16,7 @@ public class ItemData implements TableData {
 		public String itdescription;
 		public float itemprice;
 		public int quantity;
-		public int category_id;
+		public int id_category;
 	
 	// } methods {
 		// public {
@@ -36,7 +40,28 @@ public class ItemData implements TableData {
 			 * @return void
 			 */
 			public boolean load(){
-				
+				Database db = Database.getInstance();
+				db.connect();
+				db.query("SELECT id, itemname, itdescription, itemprice, quantity, id_category FROM item WHERE id = ?");
+				db.prepare(id);
+				if(db.execute()){
+					try {
+						Results res = db.getResults();
+						ListIterator<Results.Row> iter = res.listIterator();
+						if(iter.hasNext()){
+							Results.Row row = iter.next();
+							id = Integer.parseInt(row.get("id"));
+							itemname = row.get("itemname");
+							itdescription = row.get("itdescription");
+							itemprice = Float.parseFloat(row.get("itemprice"));
+							quantity = Integer.parseInt(row.get("quantity"));
+							id_category = Integer.parseInt(row.get("id_category"));
+							return true;
+						}
+					} catch(DatabaseException dbe){
+						System.out.println("Warning: Unable to load category instance.");
+					}
+				}
 				return false;
 			}// end load
 			
@@ -45,6 +70,12 @@ public class ItemData implements TableData {
 			 * @return boolean - true if update properly, false otherwise.
 			 */
 			public boolean update(){
+				Database db = Database.getInstance();
+				db.connect();
+				db.query("UPDATE item SET itemname = ?, itdescription = ?, itemprice = ?, quantity = ?, id_category = ? WHERE id = ?");
+				db.prepare(itemname, itdescription, itemprice, quantity, id_category, id);
+				if(db.execute())
+					return true;
 				return false;
 			}
 			
@@ -53,6 +84,12 @@ public class ItemData implements TableData {
 			 * @return boolean - true if insert properly, false otherwise.
 			 */
 			public boolean insert(){
+				Database db = Database.getInstance();
+				db.connect();
+				db.query("INSERT INTO item(id, itemname, itdescription, itemprice, quantity, id_category) VALUES (?, ?, ?, ?, ?, ?)");
+				db.prepare(id, itemname, itdescription, itemprice, quantity, id_category);
+				if(db.execute())
+					return true;
 				return false;
 			}
 			
@@ -61,6 +98,12 @@ public class ItemData implements TableData {
 			 * @return boolean - true if delete properly, false otherwise.
 			 */
 			public boolean delete(){
+				Database db = Database.getInstance();
+				db.connect();
+				db.query("DELETE FROM item WHERE id = ?");
+				db.prepare(id);
+				if(db.execute())
+					return true;
 				return false;
 			}
 			
