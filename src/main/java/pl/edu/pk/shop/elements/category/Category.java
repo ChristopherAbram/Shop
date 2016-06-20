@@ -1,7 +1,10 @@
 package pl.edu.pk.shop.elements.category;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
+import pl.edu.pk.shop.database.*;
+import static pl.edu.pk.shop.staticfunctions.Functions.*;
 import pl.edu.pk.shop.elements.item.*;
 
 /** Category - stores data connected with shop category,
@@ -17,10 +20,10 @@ public class Category implements Cloneable {
 		
 		// Category references:
 		protected Category _parent;
-		protected ArrayList<Category> _children;
+		protected ArrayList<Category> _children = 	new ArrayList<Category>();
 		
 		// Items belonging to this category:
-		protected ItemsList _items;
+		protected ItemsList _items = 				new ItemsList();
 		
 	// } methods {
 		// public {
@@ -31,11 +34,8 @@ public class Category implements Cloneable {
 			
 			public Category(Category ob){
 				this.data = ob.data.clone();
-				// Don't clone parent and children objects.
+				// Does not clone parent and children objects.
 			}// end Category
-			
-			
-			
 			
 			public Category getParent(){
 				return _parent;
@@ -61,7 +61,30 @@ public class Category implements Cloneable {
 			 * @return 	-
 			 **/
 			public void initTree(){
-				// TODO: write semantics of creation a tree of categories.
+				Database db = Database.getInstance();
+				db.connect();
+				db.query("SELECT id FROM category WHERE id_parent = ?");
+				db.prepare(data.id);
+				if(db.execute()){
+					try {
+						Results r = db.getResults();
+						ListIterator<Results.Row> iter = r.listIterator();
+						while(iter.hasNext()){
+							Results.Row row = iter.next();
+							int id = Integer.parseInt(row.get("id"));
+							
+							if(id != this.data.id){
+								// Create and add new category to children list:
+								Category child = new Category(id);
+								child._parent = this;
+								child.initTree(); // loads recursively
+								this._children.add(child);
+							}
+						}
+					} catch(DatabaseException dbe){
+						println("Unable to load tree of categories");
+					}
+				}
 				return;
 			}// end initTree
 			
