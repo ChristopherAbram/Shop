@@ -3,7 +3,10 @@ package pl.edu.pk.shop;
 import java.util.*;
 import pl.edu.pk.shop.elements.tabledata.*;
 import pl.edu.pk.shop.elements.address.*;
+import pl.edu.pk.shop.elements.category.Category;
 import pl.edu.pk.shop.elements.function.*;
+import pl.edu.pk.shop.elements.item.Item;
+import pl.edu.pk.shop.elements.item.ItemsList;
 import pl.edu.pk.shop.elements.user.*;
 import static pl.edu.pk.shop.staticfunctions.Functions.*;
 
@@ -15,11 +18,30 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		
+		Category root = new Category(1);
+		root.initTree(); // loads subcategories
+		
+		mprintln(root.data.categoryname, root.data.catdescription, "Przedmioty:");
+		
+		if(root.loadItems()){
+			ItemsList l = root.getItems();
+			ListIterator<Item> iter = l.listIterator();
+			while(iter.hasNext()){
+				Item item = iter.next();
+				println(item.data.itdescription);
+			}
+		} else
+			println("Unable to load items.");
+		
+		
+		
+		
+		
 		/*Admin admin = new Admin(1);
 		mprintln(admin.data.first_name, admin.data.second_name, "");
 		*/
 		
-		Function f = new Function(3);
+		/*Function f = new Function(3);
 		mprintln(f.data.id, 
 				f.data.function_name, 
 				f.data.access_level);
@@ -76,6 +98,8 @@ public class Main {
 		data.cityname = "Kraków";
 		data.zipcode = "10-345";
 		data.insert();*/
+		
+		
 	}// end main
 	
 	static public void getName(Object[] v){
