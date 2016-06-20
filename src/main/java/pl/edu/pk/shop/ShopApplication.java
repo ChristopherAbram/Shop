@@ -1,9 +1,12 @@
 package pl.edu.pk.shop;
 
+import pl.edu.pk.shop.command.Command;
+import pl.edu.pk.shop.request.*;
+
 public class ShopApplication implements Controller {
 	// vars {
 	
-		
+		private ApplicationHelper __ah;
 	
 	// } methods {
 		// public {
@@ -18,21 +21,32 @@ public class ShopApplication implements Controller {
 			/** 
 			 **/
 			public void run(){
-				init();
-				handleRequest();
+				this.init();
+				this.handleRequest();
 				return;
 			}// end run
 	
 			/** 
 			 **/
 			public void init(){
-				
+				// Initializing application:
+				__ah = ApplicationHelper.getInstance();
+				__ah.init();
 				return;
 			}// end init
 			
 			/** 
 			 **/
 			public void handleRequest(){
+				// Creating and initializing a request:
+				Request request = new ModuleRequest();
+				
+				// Creating new CommandResolver for analyzing request:
+				CommandResolver cmd_resolver = new CommandResolver();
+				Command cmd = cmd_resolver.getCommand(request);
+				
+				// Executing appropriate module:
+				cmd.execute(request);
 				
 				return;
 			}// end handleRequest
