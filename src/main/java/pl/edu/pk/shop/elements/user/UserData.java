@@ -21,6 +21,7 @@ public class UserData implements TableData {
 		public Address address;
 		public String email;
 		public String phonenumber;
+		public String password;
 		
 	// } methods {
 		
@@ -44,27 +45,39 @@ public class UserData implements TableData {
 		 * @return void
 		 */
 		public boolean load(){
-			Database db = Database.getInstance();
-			db.connect();
-			db.query("SELECT id, first_name, second_name, id_function, id_address, email, phonenumber FROM users WHERE id = ?");
-			db.prepare(id);
-			if(db.execute()){
-				try {
-					Results res = db.getResults();
-					ListIterator<Results.Row> iter = res.listIterator();
-					if(iter.hasNext()){
-						Results.Row row = iter.next();
-						id = Integer.parseInt(row.get("id"));
-						first_name = row.get("first_name");
-						second_name = row.get("second_name");
-						function = new Function(Integer.parseInt(row.get("id_function")));
-						address = new Address(Integer.parseInt(row.get("id_address")));
-						email = row.get("email");
-						phonenumber = row.get("phonenumber");
-						return true;
+			if(id == 0){
+				first_name = "GUEST";
+				second_name = "";
+				function = new Function(1); // Guest function
+				address = null;
+				email = "";
+				phonenumber = "";
+				password = "";
+				return true;
+			} else {
+				Database db = Database.getInstance();
+				db.connect();
+				db.query("SELECT id, first_name, second_name, id_function, id_address, email, phonenumber, password FROM users WHERE id = ?");
+				db.prepare(id);
+				if(db.execute()){
+					try {
+						Results res = db.getResults();
+						ListIterator<Results.Row> iter = res.listIterator();
+						if(iter.hasNext()){
+							Results.Row row = iter.next();
+							id = Integer.parseInt(row.get("id"));
+							first_name = row.get("first_name");
+							second_name = row.get("second_name");
+							function = new Function(Integer.parseInt(row.get("id_function")));
+							address = new Address(Integer.parseInt(row.get("id_address")));
+							email = row.get("email");
+							phonenumber = row.get("phonenumber");
+							password = row.get("password");
+							return true;
+						}
+					} catch(DatabaseException dbe){
+						System.out.println("Warning: Unable to load user instance.");
 					}
-				} catch(DatabaseException dbe){
-					System.out.println("Warning: Unable to load user instance.");
 				}
 			}
 			return false;
@@ -75,10 +88,12 @@ public class UserData implements TableData {
 		 * @return boolean - true if update properly, false otherwise.
 		 */
 		public boolean update(){
+			if(id == 0)
+				return true;
 			Database db = Database.getInstance();
 			db.connect();
-			db.query("UPDATE users SET first_name = ?, second_name = ?, id_function = ?, id_address = ?, email = ?, phonenumber = ? WHERE id = ?");
-			db.prepare(first_name, second_name, function.data.id, address.data.id, email, phonenumber, id);
+			db.query("UPDATE users SET first_name = ?, second_name = ?, id_function = ?, id_address = ?, email = ?, phonenumber = ?, password = ? WHERE id = ?");
+			db.prepare(first_name, second_name, function.data.id, address.data.id, email, phonenumber, password, id);
 			if(db.execute())
 				return true;
 			return false;
@@ -89,10 +104,12 @@ public class UserData implements TableData {
 		 * @return boolean - true if insert properly, false otherwise.
 		 */
 		public boolean insert(){
+			if(id == 0)
+				return true;
 			Database db = Database.getInstance();
 			db.connect();
-			db.query("INSERT INTO function(id, first_name, second_name, id_function, id_address, email, phonenumber) VALUES (?, ?, ?, ?, ?, ?, ?)");
-			db.prepare(id, first_name, second_name, function.data.id, address.data.id, email, phonenumber);
+			db.query("INSERT INTO users(id, first_name, second_name, id_function, id_address, email, phonenumber, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+			db.prepare(id, first_name, second_name, function.data.id, address.data.id, email, phonenumber, password);
 			if(db.execute())
 				return true;
 			return false;
@@ -103,6 +120,8 @@ public class UserData implements TableData {
 		 * @return boolean - true if delete properly, false otherwise.
 		 */
 		public boolean delete(){
+			if(id == 0)
+				return true;
 			Database db = Database.getInstance();
 			db.connect();
 			db.query("DELETE FROM users WHERE id = ?");
@@ -128,6 +147,7 @@ public class UserData implements TableData {
 			map.put("address", address);
 			map.put("email", email);
 			map.put("phonenumber", phonenumber);
+			map.put("password", password);
 			
 			return map;
 		}// end getAsHashMap

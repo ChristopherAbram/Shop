@@ -2,6 +2,7 @@ package pl.edu.pk.shop.command.modules;
 
 import pl.edu.pk.shop.command.Command;
 import pl.edu.pk.shop.request.Request;
+import java.io.Console;
 
 public abstract class Module implements Command {
 	// vars {

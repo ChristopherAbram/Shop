@@ -7,7 +7,13 @@ public abstract class Request {
 	// vars {
 		
 		protected HashMap<String, String> _properties = new HashMap<String, String>();
-	
+		
+		// Defined attributes:
+		public final static String MODULE = "module";
+		public final static String LOGGED = "logged";
+		public final static String GUEST = "guest";
+		
+		
 	// } methods {
 		// public {
 			
@@ -15,11 +21,15 @@ public abstract class Request {
 				this._properties.put(key, value);
 				return;
 			}
-		
+			
 			public String getProperty(String key){
 				if(this._properties.containsKey(key))
 					return this._properties.get(key);
 				return "";
+			}
+			
+			public boolean hasProperty(String key){
+				return this._properties.containsKey(key);
 			}
 			
 		// } protected {

@@ -1,5 +1,11 @@
 package pl.edu.pk.shop.staticfunctions;
 
+import java.util.ListIterator;
+
+import pl.edu.pk.shop.database.Database;
+import pl.edu.pk.shop.database.DatabaseException;
+import pl.edu.pk.shop.database.Results;
+
 /** Functions - a class containing methods not connected 
  * with specific responsibility. 
  * @author Christopher Abram
@@ -49,6 +55,46 @@ public final class Functions {
 					System.out.print(x);
 				return;
 			}// end mprint
+			
+			public static int getNextUserId(){
+				int id = -1;
+				Database db = Database.getInstance();
+				db.connect();
+				db.query("SELECT MAX(id) as max FROM users");
+				if(db.execute()){
+					try {
+						Results r = db.getResults();
+						ListIterator<Results.Row> iter = r.listIterator();
+						if(iter.hasNext()){
+							Results.Row row = iter.next();
+							id = Integer.parseInt(row.get("max")) + 1;
+						}
+					} catch(DatabaseException dbe){
+						println("Error: Cannot get max id");
+					}
+				}
+				return id;
+			}
+			
+			public static int getNextAddressId(){
+				int id = -1;
+				Database db = Database.getInstance();
+				db.connect();
+				db.query("SELECT MAX(id) as max FROM address");
+				if(db.execute()){
+					try {
+						Results r = db.getResults();
+						ListIterator<Results.Row> iter = r.listIterator();
+						if(iter.hasNext()){
+							Results.Row row = iter.next();
+							id = Integer.parseInt(row.get("max")) + 1;
+						}
+					} catch(DatabaseException dbe){
+						println("Error: Cannot get max id");
+					}
+				}
+				return id;
+			}
 			
 		// } protected {
 		

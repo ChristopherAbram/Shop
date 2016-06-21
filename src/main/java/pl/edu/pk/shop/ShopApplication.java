@@ -22,8 +22,10 @@ public class ShopApplication implements Controller {
 			 **/
 			public void run(){
 				this.init();
-				this.handleRequest();
-				return;
+				while(true){
+				    // Handle Request:
+					this.handleRequest();
+				}
 			}// end run
 	
 			/** 
