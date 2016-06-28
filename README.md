@@ -3,7 +3,7 @@ Shop Application
 
 Database:
 - username: ii246,
-- password: oracle,
+- password: ******,
 - SID: orcl,
 - hostname: 149.156.136.151,
 - port: 1521,
