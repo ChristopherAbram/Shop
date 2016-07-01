@@ -12,7 +12,7 @@ public class Guest extends User {
 		// public {
 				
 			public Guest(int ID){
-				super(ID);
+				super(0);
 			}// end Guest
 			
 			public Guest(Guest ob){

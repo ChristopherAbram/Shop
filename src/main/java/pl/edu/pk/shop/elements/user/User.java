@@ -1,5 +1,7 @@
 package pl.edu.pk.shop.elements.user;
 
+import java.util.ListIterator;
+
 import pl.edu.pk.shop.database.*;
 
 /**
@@ -41,19 +43,16 @@ public abstract class User implements Cloneable {
 				int id = -1;
 				Database db = Database.getInstance();
 				db.connect();
-				db.query("SELECT id FROM user WHERE email = ? AND password = ? FETCH FIRST 1 ROW ONLY");
-				db.prepare(new Object[]{login, password});
-				
-				db.execute();
-				/*ResultSet rs = db.getResults();
-				try {
-					if(rs.first())
-						id = rs.getInt("id");
-					else
-						System.out.println("Warning: User not exists...");
-				} catch(SQLException e){
-					System.out.println("Error: Unable to get user information!");
-				}*/
+				db.query("SELECT id FROM users WHERE email = ? AND password = ? FETCH FIRST 1 ROW ONLY");
+				db.prepare(login, password);
+				if(db.execute()){
+					Results res = db.getResults();
+					ListIterator<Results.Row> iter = res.listIterator();
+					if(iter.hasNext()){
+						Results.Row row = iter.next();
+						id = Integer.parseInt(row.get("id"));
+					}
+				}
 				return id;
 			}// end authentication
 			
