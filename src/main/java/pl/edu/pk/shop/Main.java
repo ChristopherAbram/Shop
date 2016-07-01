@@ -31,11 +31,4 @@ public class Main {
 			println(e.getMessage());
 		}
 	}// end main
-	
-	static public void getName(Object[] v){
-		for(Object x : v)
-			System.out.println(x.getClass().getSimpleName());
-		return;
-	}
-
 }
