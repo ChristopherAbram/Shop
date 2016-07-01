@@ -9,13 +9,10 @@ import java.util.Scanner;
 import pl.edu.pk.shop.elements.category.Category;
 import pl.edu.pk.shop.elements.item.Item;
 import pl.edu.pk.shop.elements.item.ItemsList;
-import pl.edu.pk.shop.elements.purchasebase.PurchaseBaseData;
 import pl.edu.pk.shop.request.Request;
 import pl.edu.pk.shop.session.Session;
 
-import java.io.Console;
-
-public class ViewBase extends Module {
+public class GuestViewBase extends Module {
 	// vars {
 	
 	// } methods {
@@ -28,58 +25,56 @@ public class ViewBase extends Module {
 			protected void _execute(Request request){
 				boolean p = false;
 				mprintln(
-						"",
-						"Categories and items:"
-					);
-					
+					"",
+					"Categories and items:"
+				);
+				
 				int id = 1;
 				int opt = 1;
 				
 				Scanner s = new Scanner(System.in);
 				
 				outter:
-				do {	
+				do {
 					mprintln(
 						"",
 						"___________________________________________________________________________________",
-						"Kategorie:"
+						"Categories:"
 					);
-						
+					
 					Category root = new Category(id); // Getting root from database
 					root.initTree();
-						
+					
 					ArrayList<Category> list = root.getSubCategories();
 					if(list.isEmpty())
 						println("Brak kategorii...");
 					else {
 						ListIterator<Category> iter = list.listIterator();
 						while(iter.hasNext()){
-								
 							Category c = iter.next();
 							println(
 								"" + setWidth("" + c.data.id, 5) + "    | " + setWidth("" + c.data.categoryname, 25)
-							);	
+							);
 						}
 					}
-						
+					
 					mprintln(
 						"","Wybierz:", 
 						" 1 - pokaz subkategorie,", 
 						" 2 - wróæ do kategorii nadrzêdnej", 
 						" 3 - pokaz przedmioty,", 
-						" 4 - kup,",
-						" 5 - wyjdŸ"
+						" 4 - wyjdŸ"
 					);
 					
 					do {
 						opt = getInt("Wybierz: ", "Podaj opcjê z menu jeszcze raz: ", true);
 						p = false;
-						if(opt < 1 || opt > 5){
+						if(opt < 1 || opt > 4){
 							println("Nie ma takiej opcji");
 							p = true;
 						}
 					} while(p);
-						
+					
 					switch(opt){
 						case 1:
 							id = getInt("Wybierz identyfikator: ", "Wybierz identyfikator jeszcze raz: ", true);
@@ -93,7 +88,7 @@ public class ViewBase extends Module {
 								"___________________________________________________________________________________", 
 								"Przedmioty:"
 							);
-								
+							
 							// Loading items:
 							if(root.loadItems()){
 								ItemsList itemList = root.getItems();
@@ -112,68 +107,13 @@ public class ViewBase extends Module {
 								}
 							}
 							break;
-						case 4:
-							int itemID = getInt("Wybierz identyfikator przedmiotu: ", "Wybierz identyfikator przedmiotu: ", true);
-							Item item = new Item(itemID);
-							
-							if(item.data != null){
-								mprintln("", "", "Dane przedmiotu:");
-								
-								print(setWidth("Identyfikator:", 20));
-								print(item.data.id);
-								println("");
-								
-								print(setWidth("Nazwa:", 20));
-								println(item.data.itemname);
-								
-								print(setWidth("Opis:", 20));
-								println(item.data.itdescription);
-								
-								print(setWidth("Cena:", 20));
-								println(item.data.itemprice + "  PLN");
-								
-								print(setWidth("Dostêpne sztuki:", 20));
-								mprintln(item.data.quantity, "", "");
-								
-								if(item.data.quantity > 0){
-									
-									int q = getInt("Zamawiana liczba sztuk: ", "Zamawiana liczba sztuk: ", true);
-									
-									if(q <= item.data.quantity && q > 0){
-										
-										String confirm = getStringLimited("Czy na pewno chcesz zamówiæ ten przedmiot?(tak/nie): ","Czy na pewno chcesz zamówiæ ten przedmiot?(tak/nie): ", 3, 3, true);
-										confirm = confirm.toLowerCase();
-										
-										if(confirm.equals("tak")){
-											
-											PurchaseBaseData pbd = new PurchaseBaseData();
-											pbd.id_user = Session.getInstance().user.data.id;
-											pbd.item = item;
-											pbd.itemquantity = q;
-											
-											item.data.quantity = item.data.quantity - q;
-											pbd.insert();
-											item.data.update();
-											//if(pbd.insert() && item.data.update())
-											println("Poprawnie dokonano zakupu...");
-											//else
-											//	println("Coœ posz³o nie tak, spróbuj ponownie póŸniej...");
-										}
-									} else 
-										println("Niepoprawna liczba sztuk...");
-								}
-								else
-									mprintln("", "Brak dostêpnego towaru...");
-							} 
-							else
-								println("Przedmiot nie istnieje...");
-							
-							break;
-						default: // (5)
+						default: // (4)
 							Session.getInstance().put(Request.MODULE, "Menu");
 							break outter;
-					}	
+					}
+					
 				} while(true);
+				
 				return;
 			}
 			

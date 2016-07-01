@@ -19,21 +19,28 @@ public class UserMenu extends Module {
 			protected void _execute(Request request){
 				
 				Scanner s = new Scanner(System.in);
-				
+				boolean p = false;
 				mprintln(
 					"",
 					"Moduly:",
 					"__________________________________________________________________________",
-					"1 | 	Start,",
-					"2 | 	Items,",
-					"3 | 	Shopping Cart",
-					"4 | 	History",
+					"1 | 	Start",
+					"2 | 	Items",
+					"3 | 	History",
+					"4 |	About Us",
 					"5 | 	Logout",
 					""
 				);
 				
-				print("Podaj opcjê z menu: ");
-				int position = s.nextInt();
+				int position = 0;
+				do {
+					position = getInt("Podaj opcjê z menu: ", "Podaj opcjê z menu jeszcze raz: ", true);
+					p = false;
+					if(position < 1 || position > 5){
+						println("Nie ma takiej opcji");
+						p = true;
+					}
+				} while(p);
 				
 				switch(position){
 					case 1:
@@ -43,10 +50,10 @@ public class UserMenu extends Module {
 						Session.getInstance().put(Request.MODULE, "ViewBase");
 						break;
 					case 3:
-						Session.getInstance().put(Request.MODULE, "ShoppingCart");
+						Session.getInstance().put(Request.MODULE, "History");
 						break;
 					case 4:
-						Session.getInstance().put(Request.MODULE, "History");
+						Session.getInstance().put(Request.MODULE, "AboutUs");
 						break;
 					case 5:
 						Session.getInstance().put(Request.MODULE, "Logout");

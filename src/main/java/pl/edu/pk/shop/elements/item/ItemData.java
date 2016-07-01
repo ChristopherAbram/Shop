@@ -86,8 +86,8 @@ public class ItemData implements TableData {
 			public boolean insert(){
 				Database db = Database.getInstance();
 				db.connect();
-				db.query("INSERT INTO item(id, itemname, itdescription, itemprice, quantity, id_category) VALUES (?, ?, ?, ?, ?, ?)");
-				db.prepare(id, itemname, itdescription, itemprice, quantity, id_category);
+				db.query("INSERT INTO item(id, itemname, itdescription, itemprice, quantity, id_category) VALUES (item_seq.nextval, ?, ?, ?, ?, ?)");
+				db.prepare(itemname, itdescription, itemprice, quantity, id_category);
 				if(db.execute())
 					return true;
 				return false;

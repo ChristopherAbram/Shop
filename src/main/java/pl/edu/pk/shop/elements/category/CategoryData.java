@@ -52,7 +52,11 @@ public class CategoryData implements TableData {
 							id = Integer.parseInt(row.get("id"));
 							categoryname = row.get("categoryname");
 							catdescription = row.get("catdescription");
-							id_parent = Integer.parseInt(row.get("id_parent"));
+							try {
+								id_parent = Integer.parseInt(row.get("id_parent"));
+							} catch(Exception e){
+								id_parent = 0;
+							}
 							return true;
 						}
 					} catch(DatabaseException dbe){
@@ -83,8 +87,8 @@ public class CategoryData implements TableData {
 			public boolean insert(){
 				Database db = Database.getInstance();
 				db.connect();
-				db.query("INSERT INTO category(id, categoryname, catdescription, id_parent) VALUES (?, ?, ?, ?)");
-				db.prepare(id, categoryname, catdescription, id_parent);
+				db.query("INSERT INTO category(id, categoryname, catdescription, id_parent) VALUES (category_seq.nextval, ?, ?, ?)");
+				db.prepare(categoryname, catdescription, id_parent);
 				if(db.execute())
 					return true;
 				return false;

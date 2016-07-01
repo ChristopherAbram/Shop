@@ -55,12 +55,12 @@ public class UserData implements TableData {
 				password = "";
 				return true;
 			} else {
-				Database db = Database.getInstance();
-				db.connect();
-				db.query("SELECT id, first_name, second_name, id_function, id_address, email, phonenumber, password FROM users WHERE id = ?");
-				db.prepare(id);
-				if(db.execute()){
-					try {
+				try {
+					Database db = Database.getInstance();
+					db.connect();
+					db.query("SELECT id, first_name, second_name, id_function, id_address, email, phonenumber, password FROM users WHERE id = ?");
+					db.prepare(id);
+					if(db.execute()){
 						Results res = db.getResults();
 						ListIterator<Results.Row> iter = res.listIterator();
 						if(iter.hasNext()){
@@ -73,11 +73,13 @@ public class UserData implements TableData {
 							email = row.get("email");
 							phonenumber = row.get("phonenumber");
 							password = row.get("password");
+							//db.close();
 							return true;
 						}
-					} catch(DatabaseException dbe){
-						System.out.println("Warning: Unable to load user instance.");
 					}
+					//db.close();
+				} catch(DatabaseException dbe){
+					System.out.println("Warning: Unable to load user instance.");
 				}
 			}
 			return false;
@@ -90,12 +92,19 @@ public class UserData implements TableData {
 		public boolean update(){
 			if(id == 0)
 				return true;
-			Database db = Database.getInstance();
-			db.connect();
-			db.query("UPDATE users SET first_name = ?, second_name = ?, id_function = ?, id_address = ?, email = ?, phonenumber = ?, password = ? WHERE id = ?");
-			db.prepare(first_name, second_name, function.data.id, address.data.id, email, phonenumber, password, id);
-			if(db.execute())
-				return true;
+			try {
+				Database db = Database.getInstance();
+				db.connect();
+				db.query("UPDATE users SET first_name = ?, second_name = ?, id_function = ?, id_address = ?, email = ?, phonenumber = ?, password = ? WHERE id = ?");
+				db.prepare(first_name, second_name, function.data.id, address.data.id, email, phonenumber, password, id);
+				if(db.execute()){
+					//db.close();
+					return true;
+				}
+				//db.close();
+			} catch(DatabaseException dbe){
+				System.out.println("Warning: Unable to update user instance.");
+			}
 			return false;
 		}// end update
 		
@@ -104,14 +113,21 @@ public class UserData implements TableData {
 		 * @return boolean - true if insert properly, false otherwise.
 		 */
 		public boolean insert(){
-			if(id == 0)
-				return true;
-			Database db = Database.getInstance();
-			db.connect();
-			db.query("INSERT INTO users(id, first_name, second_name, id_function, id_address, email, phonenumber, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-			db.prepare(id, first_name, second_name, function.data.id, address.data.id, email, phonenumber, password);
-			if(db.execute())
-				return true;
+			//if(id == 0)
+			//	return true;
+			try {
+				Database db = Database.getInstance();
+				db.connect();
+				db.query("INSERT INTO users(id, first_name, second_name, id_function, id_address, email, phonenumber, password) VALUES (users_seq.nextval, ?, ?, ?, ?, ?, ?, ?)");
+				db.prepare(first_name, second_name, function.data.id, address.data.id, email, phonenumber, password);
+				if(db.execute()){
+					db.close();
+					return true;
+				}
+				db.close();
+			} catch(DatabaseException dbe){
+				System.out.println("Warning: Unable to insert user instance.");
+			}	
 			return false;
 		}// end insert
 		
@@ -122,12 +138,19 @@ public class UserData implements TableData {
 		public boolean delete(){
 			if(id == 0)
 				return true;
-			Database db = Database.getInstance();
-			db.connect();
-			db.query("DELETE FROM users WHERE id = ?");
-			db.prepare(id);
-			if(db.execute())
-				return true;
+			try {
+				Database db = Database.getInstance();
+				db.connect();
+				db.query("DELETE FROM users WHERE id = ?");
+				db.prepare(id);
+				if(db.execute()){
+					//db.close();
+					return true;
+				}
+				//db.close();
+			} catch(DatabaseException dbe){
+				System.out.println("Warning: Unable to delete user instance.");
+			}
 			return false;
 		}// end delete
 		

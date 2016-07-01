@@ -22,18 +22,17 @@ public class Registration extends Module {
 		// } protected {
 				
 			protected void _execute(Request request){
-					
-				UserData data = new UserData();
+				
 				Scanner s = new Scanner(System.in);
+				int width = 25;
+				boolean p = false;
 				
-				data.id = getNextUserId();
+				UserData data = new UserData();
 				
-				print("First name: ");
-				String first_name = new String(s.nextLine().trim());
+				String first_name = getStringLimited(setWidth("First name:", width), "First name incorrect, enter again: ", 3, 20, true);
 				data.first_name = first_name;
 				
-				print("Second name: ");
-				String second_name = new String(s.nextLine().trim());
+				String second_name = getStringLimited(setWidth("Second name:", width), "Second name incorrect, enter again: ", 3, 35, true);
 				data.second_name = second_name;
 				
 				// Function:
@@ -41,44 +40,50 @@ public class Registration extends Module {
 				
 				// Address {
 					AddressData a_data = new AddressData();
-					a_data.id = getNextAddressId();
 					
-					print("Street: ");
-					String street = new String(s.nextLine().trim());
+					String street = getStringLimited(setWidth("Street:", width), "Street incorrect, enter again: ", 3, 30, true);//new String(s.nextLine().trim());
 					a_data.street = street;
 					
-					print("Flatnumber: ");
-					String flat = new String(s.nextLine().trim());
+					String flat = getStringLimited(setWidth("Flatnumber:", width), "Flatnumber incorrect, enter again: ", 1, 15, true);//new String(s.nextLine().trim());
 					a_data.flatnumber = flat;
 					
-					print("City: ");
-					String city = new String(s.nextLine().trim());
+					String city = getStringLimited(setWidth("City:", width), "City incorrect, enter again: ", 3, 30, true);//new String(s.nextLine().trim());
 					a_data.cityname = city;
 					
-					print("Zip Code: ");
-					String zip = new String(s.nextLine().trim());
+					String zip = getStringLimited(setWidth("Zip Code:", width), "Zip Code incorrect, enter again: ", 3, 6, true);
 					a_data.zipcode = zip;
 					
-					a_data.insert();
-					data.address = new Address(a_data.id);
+					if(a_data.insert()){
+						p = true;
+						data.address = new Address(a_data.id);
+					}
+					else
+						mprintln("","Nast¹pi³ b³¹d w trakcie tworzenia adresu", "");
 					
 				// }
+				
+				if(p){
+					String email = getStringLimited(setWidth("e-mail:", width), "e-mail incorrect, enter again: ", 5, 64, true);
+					data.email = email;
 					
-				print("e-mail: ");
-				String email = new String(s.nextLine().trim());
-				data.email = email;
-				
-				print("Phone number: ");
-				String phone = new String(s.nextLine().trim());
-				data.phonenumber = phone;
-				
-				print("Password: ");
-				String password = new String(s.nextLine().trim());
-				data.password = password;
-				
+					String phone = getStringLimited(setWidth("Phone number:", width), "Phone number incorrect, enter again: ", 8, 15, true);
+					data.phonenumber = phone;
+					
+					String password = getStringLimited(setWidth("Password:", width), "Password number incorrect, enter again: ", 4, 15, true);
+					data.password = password;
+				}
 				
 				// Creating new user:
-				data.insert();
+				
+				if(p && data.insert())
+					mprintln("","Poprawnie zarejestrowano u¿ytkownika","");
+				else
+					mprintln("","Nast¹pi³ b³¹d w trakcie rejestrowania nowego u¿ytkownika, spróbuj ponownie póŸniej...","");
+				
+				mprintln("","Naciœnij enter, aby przejœæ do start ");
+				if(s.hasNextLine())
+					s.nextLine();
+				
 				Session.getInstance().put(Request.MODULE, "Start");
 				
 				return;

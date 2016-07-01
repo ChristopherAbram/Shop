@@ -23,7 +23,8 @@ public class Start extends Module {
 					" Witaj w sklepie!!!",
 					" Aby sie zalogowac wpisz 1",
 					" Aby siê zarejestrowac wpisz 0",
-					"___________________________________________________________________________________"
+					"___________________________________________________________________________________",
+					""
 				);
 				
 				Scanner s = new Scanner(System.in);
@@ -31,9 +32,7 @@ public class Start extends Module {
 				// Enter option:
 				int option = -1;
 				do {
-					println("");
-					print("Option: ");
-					option = Integer.parseInt(new String(s.nextLine().trim()));
+					option = getInt("Option: ", "Option again: ", true);
 					
 					if(!(option == 1 || option == 0))
 						println("Nie ma takiej opcji...");

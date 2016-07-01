@@ -41,8 +41,11 @@ public class UserStart extends Module {
 				
 				Scanner s = new Scanner(System.in);
 				print("Nacisnij enter, by przejsc do menu. ");
-				s.nextLine();
-				Session.getInstance().put(Request.MODULE, "UserMenu");
+				if(s.hasNextLine())
+					s.nextLine();
+				
+				
+				Session.getInstance().put(Request.MODULE, "Menu");
 			}
 			
 		// } private {

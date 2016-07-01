@@ -16,8 +16,8 @@ public final class Database {
 		private PreparedStatement __pstmt 		= null;
 		
 		// SQL Server connection parameters:
-		private static String __username 		= "ii246";
-		private static String __password 		= "oracle";
+		private static String __username 		= "ii245";
+		private static String __password 		= "oracleii";
 		private static String __hostname 		= "149.156.136.151";
 		private static String __port 			= "1521";
 		private static String __SID 			= "orcl";
@@ -149,7 +149,26 @@ public final class Database {
 			public boolean execute(){
 				boolean p = false;
 				try {
-					p = __pstmt.execute();
+					
+					// Decide the type of query:
+					String query = "";
+					try {
+						query = __sqlQuery.substring(0, 6);
+					} catch(IndexOutOfBoundsException ioobe){
+						query = "";
+					}
+					query = query.toLowerCase();
+					
+					//System.out.println(query);
+					
+					if(query.equals(""))
+						return p;
+					else if(query.equals("select"))
+						p = __pstmt.execute();
+					else if(query.equals("update") || query.equals("insert") || query.equals("delete")){
+						int r = __pstmt.executeUpdate();
+						p = r > 0;
+					}
 				} catch(SQLException e){
 					System.out.println("Error: unable to execute SQL query!");
 				}
@@ -168,6 +187,34 @@ public final class Database {
 					throw new DatabaseException("Error: unable to get results!");
 				}
 			}// end getResults
+			
+			/** Closes database connection.
+			 * @author Christopher Abram
+			 * @return boolan - true if ok, otherwise false.
+			 * @thorws DatabaseException - when unable to close.
+			 **/
+			public boolean close(){
+				boolean p = false;
+				if(__pstmt != null){
+					try {
+						__pstmt.close();
+						p = true;
+					} catch(SQLException e){
+						p = false;
+						throw new DatabaseException("Error: unable to close SQL connection!");
+					}
+				}
+				if(__conn != null){
+					try {
+						__conn.close();
+						p &= true;
+					} catch(SQLException e){
+						p &= false;
+						throw new DatabaseException("Error: unable to close SQL connection!");
+					}
+				}
+				return p;
+			}// end close
 			
 		// } protected {
 			
