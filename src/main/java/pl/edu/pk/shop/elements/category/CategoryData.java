@@ -85,10 +85,11 @@ public class CategoryData implements TableData {
 			 * @return boolean - true if insert properly, false otherwise.
 			 */
 			public boolean insert(){
+				id = nextID();
 				Database db = Database.getInstance();
 				db.connect();
-				db.query("INSERT INTO category(id, categoryname, catdescription, id_parent) VALUES (category_seq.nextval, ?, ?, ?)");
-				db.prepare(categoryname, catdescription, id_parent);
+				db.query("INSERT INTO category(id, categoryname, catdescription, id_parent) VALUES (?, ?, ?, ?)");
+				db.prepare(id, categoryname, catdescription, id_parent);
 				if(db.execute())
 					return true;
 				return false;
@@ -107,6 +108,27 @@ public class CategoryData implements TableData {
 					return true;
 				return false;
 			}// end delete
+			
+			public int nextID(){
+				int ID = -1;
+				try {
+					Database db = Database.getInstance();
+					db.connect();
+					db.query("SELECT category_seq.nextval AS id FROM dual");
+					db.prepare();
+					if(db.execute()){
+						Results res = db.getResults();
+						ListIterator<Results.Row> iter = res.listIterator();
+						while(iter.hasNext()){
+							Results.Row row = iter.next();
+							ID = Integer.parseInt(row.get("id"));
+						}
+					}
+				} catch(DatabaseException dbe){
+					System.out.println("Error: unable to get next Category id.");
+				}
+				return ID;
+			}// end nextID
 			
 			/**Gets all CategoryData properties as HashMap.
 			 * Keys name are the same as properties names.

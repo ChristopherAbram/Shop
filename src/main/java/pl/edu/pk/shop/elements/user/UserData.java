@@ -116,10 +116,11 @@ public class UserData implements TableData {
 			//if(id == 0)
 			//	return true;
 			try {
+				id = nextID();
 				Database db = Database.getInstance();
 				db.connect();
-				db.query("INSERT INTO users(id, first_name, second_name, id_function, id_address, email, phonenumber, password) VALUES (users_seq.nextval, ?, ?, ?, ?, ?, ?, ?)");
-				db.prepare(first_name, second_name, function.data.id, address.data.id, email, phonenumber, password);
+				db.query("INSERT INTO users(id, first_name, second_name, id_function, id_address, email, phonenumber, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+				db.prepare(id, first_name, second_name, function.data.id, address.data.id, email, phonenumber, password);
 				if(db.execute()){
 					//db.close();
 					return true;
@@ -153,6 +154,27 @@ public class UserData implements TableData {
 			}
 			return false;
 		}// end delete
+		
+		public int nextID(){
+			int ID = -1;
+			try {
+				Database db = Database.getInstance();
+				db.connect();
+				db.query("SELECT users_seq.nextval AS id FROM dual");
+				db.prepare();
+				if(db.execute()){
+					Results res = db.getResults();
+					ListIterator<Results.Row> iter = res.listIterator();
+					while(iter.hasNext()){
+						Results.Row row = iter.next();
+						ID = Integer.parseInt(row.get("id"));
+					}
+				}
+			} catch(DatabaseException dbe){
+				System.out.println("Error: unable to get next User id.");
+			}
+			return ID;
+		}// end nextID
 		
 		/**Gets all UserData properties as HashMap.
 		 * Keys name are the same as properties names.

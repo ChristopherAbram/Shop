@@ -30,10 +30,11 @@ public class AdminMenu extends Module {
 					"1 | 	Start",
 					"2 |	Add Item",
 					"3 |	Add Category",
-					"4 |	Items",
-					"5 |	History",
-					"6 |	About Us",
-					"7 | 	Logout",
+					"4 |	Create new admin account",
+					"5 |	Items",
+					"6 |	History",
+					"7 |	About Us",
+					"8 | 	Logout",
 					""
 				);
 				
@@ -41,7 +42,7 @@ public class AdminMenu extends Module {
 				do {
 					position = getInt("Podaj opcjê z menu: ", "Podaj opcjê z menu jeszcze raz: ", true);
 					p = false;
-					if(position < 1 || position > 7){
+					if(position < 1 || position > 8){
 						println("Nie ma takiej opcji");
 						p = true;
 					}
@@ -58,15 +59,18 @@ public class AdminMenu extends Module {
 						Session.getInstance().put(Request.MODULE, "AddCategory");
 						break;
 					case 4:
-						Session.getInstance().put(Request.MODULE, "ViewBase");
+						Session.getInstance().put(Request.MODULE, "NewAdmin");
 						break;
 					case 5:
-						Session.getInstance().put(Request.MODULE, "History");
+						Session.getInstance().put(Request.MODULE, "ViewBase");
 						break;
 					case 6:
-						Session.getInstance().put(Request.MODULE, "AboutUs");
+						Session.getInstance().put(Request.MODULE, "History");
 						break;
 					case 7:
+						Session.getInstance().put(Request.MODULE, "AboutUs");
+						break;
+					case 8:
 						Session.getInstance().put(Request.MODULE, "Logout");
 						break;
 					default:

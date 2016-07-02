@@ -89,10 +89,12 @@ public class AddressData implements TableData {
 			 */
 			public boolean insert(){
 				try {
+					this.id = this.nextID();
 					Database db = Database.getInstance();
 					db.connect();
-					db.query("INSERT INTO address(id, street, flatnumber, cityname, zipcode) VALUES (address_seq.nextval, ?, ?, ?, ?)");
-					db.prepare(street, flatnumber, cityname, zipcode);
+					db.query("INSERT INTO address(id, street, flatnumber, cityname, zipcode) VALUES (?, ?, ?, ?, ?)");
+					//System.out.println(id);
+					db.prepare(id, street, flatnumber, cityname, zipcode);
 					if(db.execute()){
 						//db.close();
 						return true;
@@ -124,6 +126,27 @@ public class AddressData implements TableData {
 				}
 				return false;
 			}// end delete
+			
+			public int nextID(){
+				int ID = -1;
+				try {
+					Database db = Database.getInstance();
+					db.connect();
+					db.query("SELECT address_seq.nextval AS id FROM dual");
+					//db.prepare();
+					if(db.execute()){
+						Results res = db.getResults();
+						ListIterator<Results.Row> iter = res.listIterator();
+						while(iter.hasNext()){
+							Results.Row row = iter.next();
+							ID = Integer.parseInt(row.get("id"));
+						}
+					}
+				} catch(DatabaseException dbe){
+					System.out.println("Error: unable to get next Address id.");
+				}
+				return ID;
+			}// end nextID
 			
 			/**Gets all AddressData properties as HashMap.
 			 * Keys name are the same as properties names.

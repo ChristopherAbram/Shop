@@ -24,10 +24,12 @@ public final class Database {
 		private static String __connectionName 	= "JavaShopProject";
 		
 		// Maximum time in seconds:
-		private static int __timeout 			= 10;
+		private static int __timeout 			= 30;
 		
 		// SQL query parameters:
 		private String __sqlQuery				= "";
+		
+		private boolean __connected				= false;
 		
 	// } methods {
 		// public {
@@ -71,6 +73,7 @@ public final class Database {
 					try {
 						DriverManager.setLoginTimeout(__timeout);
 						__conn = DriverManager.getConnection(url, user, password);
+						__connected = true;
 					} catch(SQLTimeoutException sqlToE){
 						System.out.println("Error: Login timeout!");
 					} catch(SQLException sqlE){
@@ -211,6 +214,7 @@ public final class Database {
 					try {
 						__conn.close();
 						p &= true;
+						__connected = false;
 					} catch(SQLException e){
 						p &= false;
 						throw new DatabaseException("Error: unable to close SQL connection!");
@@ -218,6 +222,10 @@ public final class Database {
 				}
 				return p;
 			}// end close
+			
+			public boolean connected(){
+				return __connected;
+			}
 			
 		// } protected {
 			

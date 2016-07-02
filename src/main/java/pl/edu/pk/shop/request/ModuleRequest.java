@@ -70,6 +70,9 @@ public class ModuleRequest extends Request {
 							
 							else if(__session.get(Request.MODULE).equals("AddCategory"))
 								this.setProperty(Request.MODULE, "AddCategory");
+							
+							else if(__session.get(Request.MODULE).equals("NewAdmin"))
+								this.setProperty(Request.MODULE, "NewAdmin");
 						}
 						else {
 							if(__session.get(Request.MODULE).equals("Menu"))
