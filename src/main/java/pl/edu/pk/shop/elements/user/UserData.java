@@ -121,10 +121,10 @@ public class UserData implements TableData {
 				db.query("INSERT INTO users(id, first_name, second_name, id_function, id_address, email, phonenumber, password) VALUES (users_seq.nextval, ?, ?, ?, ?, ?, ?, ?)");
 				db.prepare(first_name, second_name, function.data.id, address.data.id, email, phonenumber, password);
 				if(db.execute()){
-					db.close();
+					//db.close();
 					return true;
 				}
-				db.close();
+				//db.close();
 			} catch(DatabaseException dbe){
 				System.out.println("Warning: Unable to insert user instance.");
 			}	

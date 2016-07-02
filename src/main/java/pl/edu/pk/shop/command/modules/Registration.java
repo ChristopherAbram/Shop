@@ -27,6 +27,12 @@ public class Registration extends Module {
 				int width = 25;
 				boolean p = false;
 				
+				mprintln("",
+					" Rejestracja u¿ytkownika",
+					"___________________________________________________________________________________",
+					"",""
+				);
+				
 				UserData data = new UserData();
 				
 				String first_name = getStringLimited(setWidth("First name:", width), "First name incorrect, enter again: ", 3, 20, true);
@@ -34,9 +40,6 @@ public class Registration extends Module {
 				
 				String second_name = getStringLimited(setWidth("Second name:", width), "Second name incorrect, enter again: ", 3, 35, true);
 				data.second_name = second_name;
-				
-				// Function:
-				data.function = new Function(2);
 				
 				// Address {
 					AddressData a_data = new AddressData();
@@ -58,7 +61,7 @@ public class Registration extends Module {
 						data.address = new Address(a_data.id);
 					}
 					else
-						mprintln("","Nast¹pi³ b³¹d w trakcie tworzenia adresu", "");
+						mprintln("","Nast¹pi³ b³¹d w trakcie zapisywania adresu", "");
 					
 				// }
 				
@@ -71,11 +74,14 @@ public class Registration extends Module {
 					
 					String password = getStringLimited(setWidth("Password:", width), "Password number incorrect, enter again: ", 4, 15, true);
 					data.password = password;
+					
+					// Function:
+					data.function = new Function(2);
 				}
 				
 				// Creating new user:
-				
-				if(p && data.insert())
+				p &= data.insert();
+				if(p)
 					mprintln("","Poprawnie zarejestrowano u¿ytkownika","");
 				else
 					mprintln("","Nast¹pi³ b³¹d w trakcie rejestrowania nowego u¿ytkownika, spróbuj ponownie póŸniej...","");

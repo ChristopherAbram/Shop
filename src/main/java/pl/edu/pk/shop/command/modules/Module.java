@@ -10,6 +10,11 @@ public abstract class Module implements Command {
 		// public {
 			
 			public void execute(Request request){
+				try {
+					new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+				} catch(Exception e){
+					
+				}
 				this._execute(request);
 				return;
 			}

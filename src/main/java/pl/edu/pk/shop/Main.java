@@ -25,6 +25,7 @@ public class Main {
 		
 		// Run shop application:
 		try {
+			Database.getInstance().connect();
 			ShopApplication.runShop();
 		} catch(Exception e){
 			println("Upsss!!! Unexpected error occurred...");
