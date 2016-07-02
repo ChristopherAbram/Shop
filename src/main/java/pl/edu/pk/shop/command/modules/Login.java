@@ -24,7 +24,8 @@ public class Login extends Module {
 				mprintln(
 					" Aby sie zalogowac wpisz swoj login i haslo",
 					" Aby skorzystaæ z aplikacji jako gosc, wpisz jako login: guest (nie wymaga hasla)",
-					"___________________________________________________________________________________"
+					"___________________________________________________________________________________",
+					""
 				);
 				
 				Scanner s = new Scanner(System.in);
@@ -36,12 +37,10 @@ public class Login extends Module {
 					String password = "";
 					
 					println("");
-					print("Login: ");
-					login = new String(s.nextLine().trim());
+					login = getString("login: ", "login again: ", 64, true);//new String(s.nextLine().trim());
 					
 					if(!login.equals(new String("guest"))){
-						print("password: ");
-						password = new String(s.nextLine().trim());
+						password = getString("password: ", "password again: ", 15, true);//new String(s.nextLine().trim());
 						
 						// Autoryzacja:
 						id = User.authentication(login, password);
@@ -71,12 +70,19 @@ public class Login extends Module {
 					}
 					
 					Session.getInstance().put(Request.GUEST, "0");
+					Session.getInstance().put(Request.LOGGED, "0");
+					Session.getInstance().put(Request.ADMIN, "0");
 					if(data.function.data.access_level == 0){
-						Session.getInstance().put(Request.MODULE, "GuestMenu");
+						Session.getInstance().put(Request.MODULE, "Menu");
 						Session.getInstance().put(Request.GUEST, "1");
 					}
-					else {
+					else if(data.function.data.access_level == 1){
 						Session.getInstance().put(Request.LOGGED, "1");
+						Session.getInstance().put(Request.MODULE, "UserStart");
+					}
+					else if(data.function.data.access_level == 2){
+						Session.getInstance().put(Request.LOGGED, "1");
+						Session.getInstance().put(Request.ADMIN, "1");
 						Session.getInstance().put(Request.MODULE, "UserStart");
 					}
 				} else {

@@ -43,7 +43,7 @@ public abstract class User implements Cloneable {
 				int id = -1;
 				Database db = Database.getInstance();
 				db.connect();
-				db.query("SELECT id FROM users WHERE email = ? AND password = ? FETCH FIRST 1 ROW ONLY");
+				db.query("SELECT id FROM users WHERE email LIKE ? AND password LIKE ? FETCH FIRST 1 ROW ONLY");
 				db.prepare(login, password);
 				if(db.execute()){
 					Results res = db.getResults();

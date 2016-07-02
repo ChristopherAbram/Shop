@@ -1,6 +1,8 @@
 package pl.edu.pk.shop.command.modules;
 
-import static pl.edu.pk.shop.staticfunctions.Functions.*;
+import static pl.edu.pk.shop.staticfunctions.Functions.getStringLimited;
+import static pl.edu.pk.shop.staticfunctions.Functions.mprintln;
+import static pl.edu.pk.shop.staticfunctions.Functions.setWidth;
 
 import java.util.Scanner;
 
@@ -11,14 +13,12 @@ import pl.edu.pk.shop.elements.user.UserData;
 import pl.edu.pk.shop.request.Request;
 import pl.edu.pk.shop.session.Session;
 
-public class Registration extends Module {
+public class NewAdmin extends Module {
 	// vars {
-	
+		
 	// } methods {
 		// public {
-				
-				
-				
+			
 		// } protected {
 				
 			protected void _execute(Request request){
@@ -28,7 +28,7 @@ public class Registration extends Module {
 				boolean p = false;
 				
 				mprintln("",
-					" Rejestracja u¿ytkownika",
+					" Rejestracja konta administratora",
 					"___________________________________________________________________________________",
 					"",""
 				);
@@ -76,7 +76,7 @@ public class Registration extends Module {
 					data.password = password;
 					
 					// Function:
-					data.function = new Function(2);
+					data.function = new Function(3);
 				}
 				
 				// Creating new user:
@@ -90,7 +90,7 @@ public class Registration extends Module {
 				if(s.hasNextLine())
 					s.nextLine();
 				
-				Session.getInstance().put(Request.MODULE, "Start");
+				Session.getInstance().put(Request.MODULE, "Menu");
 				
 				return;
 			}

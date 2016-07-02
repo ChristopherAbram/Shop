@@ -84,6 +84,7 @@ public class ItemData implements TableData {
 			 * @return boolean - true if insert properly, false otherwise.
 			 */
 			public boolean insert(){
+				id = nextID();
 				Database db = Database.getInstance();
 				db.connect();
 				db.query("INSERT INTO item(id, itemname, itdescription, itemprice, quantity, id_category) VALUES (?, ?, ?, ?, ?, ?)");
@@ -106,6 +107,27 @@ public class ItemData implements TableData {
 					return true;
 				return false;
 			}
+			
+			public int nextID(){
+				int ID = -1;
+				try {
+					Database db = Database.getInstance();
+					db.connect();
+					db.query("SELECT item_seq.nextval AS id FROM dual");
+					db.prepare();
+					if(db.execute()){
+						Results res = db.getResults();
+						ListIterator<Results.Row> iter = res.listIterator();
+						while(iter.hasNext()){
+							Results.Row row = iter.next();
+							ID = Integer.parseInt(row.get("id"));
+						}
+					}
+				} catch(DatabaseException dbe){
+					System.out.println("Error: unable to get next Item id.");
+				}
+				return ID;
+			}// end nextID
 			
 			/**Gets all ItemData properties as HashMap.
 			 * Keys name are the same as properties names.

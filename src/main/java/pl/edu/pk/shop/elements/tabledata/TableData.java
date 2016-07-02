@@ -32,6 +32,8 @@ public interface TableData extends Cloneable {
 	 */
 	public boolean delete();
 	
+	public int nextID();
+	
 	/**Gets all row data attributes as HashMap.
 	 * Keys name are the same as attributes names.
 	 * @author Christopher Abram

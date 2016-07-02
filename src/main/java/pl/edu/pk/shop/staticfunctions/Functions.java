@@ -1,6 +1,8 @@
 package pl.edu.pk.shop.staticfunctions;
 
+import java.util.InputMismatchException;
 import java.util.ListIterator;
+import java.util.Scanner;
 
 import pl.edu.pk.shop.database.Database;
 import pl.edu.pk.shop.database.DatabaseException;
@@ -95,6 +97,103 @@ public final class Functions {
 				}
 				return id;
 			}
+			
+			public static String setWidth(String str, int width){
+				String tmp = str;
+				if(tmp.length() < width){
+					for(int i = tmp.length() + 1; i <= width; i++)
+						tmp += " ";
+				}
+				return tmp;
+			}// end setWidth
+			
+			public static int getInt(String inputMessage, String errorMessage, boolean doReapeat){
+				String inputString = "";
+				int integer = 0;
+				boolean p = false;
+				Scanner s = new Scanner(System.in);
+				
+				do {
+					try{
+						if(!p)
+							print(inputMessage);
+						
+						if(s.hasNextLine())
+							inputString = s.nextLine();
+						
+						integer = Integer.parseInt(inputString);
+						p = false;
+					} catch(NumberFormatException nfe){
+						p = true;
+						print(errorMessage);
+					}
+				} while(p && doReapeat);
+				return integer;
+			}// end getInt
+			
+			public static float getFloat(String inputMessage, String errorMessage, boolean doReapeat){
+				String inputString = "";
+				float _float = 0.f;
+				boolean p = false;
+				Scanner s = new Scanner(System.in);
+				
+				do {
+					try{
+						if(!p)
+							print(inputMessage);
+						
+						if(s.hasNextLine())
+							inputString = s.nextLine();
+						
+						_float = Float.parseFloat(inputString);
+						p = false;
+					} catch(NumberFormatException nfe){
+						p = true;
+						print(errorMessage);
+					}
+				} while(p && doReapeat);
+				return _float;
+			}// end getFloat
+			
+			public static String getString(String inputMessage, String errorMessage, int len, boolean doRepeat){
+				String inputString = "";
+				boolean p = false;
+				Scanner s = new Scanner(System.in);
+				do {
+					if(!p)
+						print(inputMessage);
+					else
+						print(errorMessage);
+					
+					if(s.hasNextLine())
+						inputString = s.nextLine();
+					p = false;
+					
+					if(inputString.length() > len)
+						p = true;
+				} while (p && doRepeat);
+				return inputString;
+			}// end getString
+			
+			public static String getStringLimited(String inputMessage, String errorMessage, int min, int max, boolean doRepeat){
+				String inputString = "";
+				boolean p = false;
+				Scanner s = new Scanner(System.in);
+				do {
+					if(!p)
+						print(inputMessage);
+					else
+						print(errorMessage);
+					
+					if(s.hasNextLine())
+						inputString = s.nextLine();
+					p = false;
+					
+					if(inputString.length() > max || inputString.length() < min)
+						p = true;
+				} while (p && doRepeat);
+				return inputString;
+			}// end getString
 			
 		// } protected {
 		

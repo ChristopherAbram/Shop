@@ -43,12 +43,12 @@ public class AddressData implements TableData {
 			 * @return void
 			 */
 			public boolean load(){
-				Database db = Database.getInstance();
-				db.connect();
-				db.query("SELECT id, street, flatnumber, cityname, zipcode FROM address WHERE id = ?");
-				db.prepare(id);
-				if(db.execute()){
-					try {
+				try {
+					Database db = Database.getInstance();
+					db.connect();
+					db.query("SELECT id, street, flatnumber, cityname, zipcode FROM address WHERE id = ?");
+					db.prepare(id);
+					if(db.execute()){
 						Results res = db.getResults();
 						ListIterator<Results.Row> iter = res.listIterator();
 						if(iter.hasNext()){
@@ -58,11 +58,13 @@ public class AddressData implements TableData {
 							flatnumber = row.get("flatnumber");
 							cityname = row.get("cityname");
 							zipcode = row.get("zipcode");
+							//db.close();
 							return true;
 						}
-					} catch(DatabaseException dbe){
-						System.out.println("Warning: Unable to load address instance.");
 					}
+					//db.close();
+				} catch(DatabaseException dbe){
+					System.out.println("Warning: Unable to load address instance.");
 				}
 				return false;
 			}// end load
@@ -86,12 +88,21 @@ public class AddressData implements TableData {
 			 * @return boolean - true if insert properly, false otherwise.
 			 */
 			public boolean insert(){
-				Database db = Database.getInstance();
-				db.connect();
-				db.query("INSERT INTO address(id, street, flatnumber, cityname, zipcode) VALUES (?, ?, ?, ?, ?)");
-				db.prepare(id, street, flatnumber, cityname, zipcode);
-				if(db.execute())
-					return true;
+				try {
+					this.id = this.nextID();
+					Database db = Database.getInstance();
+					db.connect();
+					db.query("INSERT INTO address(id, street, flatnumber, cityname, zipcode) VALUES (?, ?, ?, ?, ?)");
+					//System.out.println(id);
+					db.prepare(id, street, flatnumber, cityname, zipcode);
+					if(db.execute()){
+						//db.close();
+						return true;
+					}
+					//db.close();
+				} catch(DatabaseException de){
+					System.out.println("Error: Unable to insert address instance.");
+				}
 				return false;
 			}// end insert
 			
@@ -100,14 +111,42 @@ public class AddressData implements TableData {
 			 * @return boolean - true if delete properly, false otherwise.
 			 */
 			public boolean delete(){
-				Database db = Database.getInstance();
-				db.connect();
-				db.query("DELETE FROM address WHERE id = ?");
-				db.prepare(id);
-				if(db.execute())
-					return true;
+				try {
+					Database db = Database.getInstance();
+					db.connect();
+					db.query("DELETE FROM address WHERE id = ?");
+					db.prepare(id);
+					if(db.execute()){
+						//db.close();
+						return true;
+					}
+					//db.close();
+				} catch(DatabaseException de){
+					System.out.println("Error: Unable to delete address instance.");
+				}
 				return false;
 			}// end delete
+			
+			public int nextID(){
+				int ID = -1;
+				try {
+					Database db = Database.getInstance();
+					db.connect();
+					db.query("SELECT address_seq.nextval AS id FROM dual");
+					//db.prepare();
+					if(db.execute()){
+						Results res = db.getResults();
+						ListIterator<Results.Row> iter = res.listIterator();
+						while(iter.hasNext()){
+							Results.Row row = iter.next();
+							ID = Integer.parseInt(row.get("id"));
+						}
+					}
+				} catch(DatabaseException dbe){
+					System.out.println("Error: unable to get next Address id.");
+				}
+				return ID;
+			}// end nextID
 			
 			/**Gets all AddressData properties as HashMap.
 			 * Keys name are the same as properties names.

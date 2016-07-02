@@ -3,7 +3,10 @@ package pl.edu.pk.shop.elements.purchasebase;
 import pl.edu.pk.shop.database.Database;
 import pl.edu.pk.shop.database.DatabaseException;
 import pl.edu.pk.shop.database.Results;
+import pl.edu.pk.shop.elements.item.Item;
 import pl.edu.pk.shop.elements.tabledata.TableData;
+import pl.edu.pk.shop.elements.user.User;
+
 import java.util.HashMap;
 import java.util.ListIterator;
 
@@ -12,6 +15,10 @@ public class PurchaseBaseData implements TableData {
 	
 		// Attributes:
 		public int id;
+		public Item item;
+		public int itemquantity;
+		public int id_user;
+		public String b_date;
 		
 	// } methods {
 		// public {
@@ -20,7 +27,10 @@ public class PurchaseBaseData implements TableData {
 			
 			public PurchaseBaseData(PurchaseBaseData ob){
 				this.id = ob.id;
-				// ...
+				this.item = ob.item.clone();
+				this.itemquantity = ob.itemquantity;
+				this.id_user = ob.id_user;
+				this.b_date = ob.b_date;
 			}// end ItemData
 				
 			public PurchaseBaseData(int ID){
@@ -37,7 +47,7 @@ public class PurchaseBaseData implements TableData {
 			public boolean load(){
 				Database db = Database.getInstance();
 				db.connect();
-				db.query("SELECT id, FROM purchasebase WHERE id = ?");
+				db.query("SELECT id, id_item, itemquantity, id_user, b_date FROM purchase_base WHERE id = ?");
 				db.prepare(id);
 				if(db.execute()){
 					try {
@@ -46,6 +56,10 @@ public class PurchaseBaseData implements TableData {
 						if(iter.hasNext()){
 							Results.Row row = iter.next();
 							id = Integer.parseInt(row.get("id"));
+							item = new Item(Integer.parseInt(row.get("id_item")));
+							itemquantity = Integer.parseInt(row.get("itemquantity"));
+							id_user = Integer.parseInt(row.get("id_user"));
+							b_date = row.get("b_date");
 							return true;
 						}
 					} catch(DatabaseException dbe){
@@ -62,8 +76,8 @@ public class PurchaseBaseData implements TableData {
 			public boolean update(){
 				Database db = Database.getInstance();
 				db.connect();
-				db.query("UPDATE purchasebase SET ... WHERE id = ?");
-				db.prepare(id);
+				db.query("UPDATE purchase_base SET id_item = ?, itemquantity = ?, id_user = ?, b_date = ? WHERE id = ?");
+				db.prepare(item.data.id, itemquantity, id_user, b_date, id);
 				if(db.execute())
 					return true;
 				return false;
@@ -74,10 +88,11 @@ public class PurchaseBaseData implements TableData {
 			* @return boolean - true if insert properly, false otherwise.
 			*/
 			public boolean insert(){
+				id = nextID();
 				Database db = Database.getInstance();
 				db.connect();
-				db.query("INSERT INTO purchasebase(id, ) VALUES (?, )");
-				db.prepare(id);
+				db.query("INSERT INTO purchase_base(id, id_item, itemquantity, id_user) VALUES (?, ?, ?, ?)");
+				db.prepare(id, item.data.id, itemquantity, id_user);
 				if(db.execute())
 					return true;
 				return false;
@@ -90,12 +105,33 @@ public class PurchaseBaseData implements TableData {
 			public boolean delete(){
 				Database db = Database.getInstance();
 				db.connect();
-				db.query("DELETE FROM purchasebase WHERE id = ?");
+				db.query("DELETE FROM purchase_base WHERE id = ?");
 				db.prepare(id);
 				if(db.execute())
 					return true;
 				return false;
 			}
+			
+			public int nextID(){
+				int ID = -1;
+				try {
+					Database db = Database.getInstance();
+					db.connect();
+					db.query("SELECT pb_seq.nextval AS id FROM dual");
+					db.prepare();
+					if(db.execute()){
+						Results res = db.getResults();
+						ListIterator<Results.Row> iter = res.listIterator();
+						while(iter.hasNext()){
+							Results.Row row = iter.next();
+							ID = Integer.parseInt(row.get("id"));
+						}
+					}
+				} catch(DatabaseException dbe){
+					System.out.println("Error: unable to get next PurchaseBase id.");
+				}
+				return ID;
+			}// end nextID
 				
 			/**Gets all ItemData properties as HashMap.
 			* Keys name are the same as properties names.

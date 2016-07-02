@@ -1,6 +1,5 @@
 package pl.edu.pk.shop.request;
 
-import static pl.edu.pk.shop.staticfunctions.Functions.println;
 import java.util.HashMap;
 
 public abstract class Request {
@@ -12,6 +11,7 @@ public abstract class Request {
 		public final static String MODULE = "module";
 		public final static String LOGGED = "logged";
 		public final static String GUEST = "guest";
+		public final static String ADMIN = "admin";
 		
 		
 	// } methods {
