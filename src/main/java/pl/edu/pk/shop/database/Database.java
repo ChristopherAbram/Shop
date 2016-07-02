@@ -105,34 +105,37 @@ public final class Database {
 					try {
 						int i = 1;
 						for(Object ob : values){
-							switch(_getClassName(ob)){
-								case "Character":
-									__pstmt.setString(i, ob.toString());
-									break;
-								case "Byte":
-									__pstmt.setString(i, ob.toString());
-									break;
-								case "Short":
-									__pstmt.setInt(i, (short)ob);
-									break;
-								case "Integer":
-									__pstmt.setInt(i, (int)ob);
-									break;
-								case "Long":
-									__pstmt.setLong(i, (long)ob);
-									break;
-								case "Float":
-									__pstmt.setFloat(i, (float)ob);
-									break;
-								case "Double":
-									__pstmt.setDouble(i, (double)ob);
-									break;
-								case "String":
-									__pstmt.setString(i, (String)ob);
-									break;
-								default:
-									__pstmt.setString(i, ob.toString());
-							}
+							String s = _getClassName(ob);
+							
+							if(s.equals("Character"))
+								__pstmt.setString(i, ob.toString());
+							
+							else if(s.equals("Byte"))
+								__pstmt.setString(i, ob.toString());
+							
+							else if(s.equals("Short"))
+								__pstmt.setInt(i, (Short)ob);
+							
+							else if(s.equals("Integer"))
+								__pstmt.setInt(i, (Integer)ob);
+							
+							else if(s.equals("Long"))
+								__pstmt.setLong(i, (Long)ob);
+							
+							else if(s.equals("Float"))
+								__pstmt.setFloat(i, (Float)ob);
+							
+							else if(s.equals("Double"))
+								__pstmt.setDouble(i, (Double)ob);
+							
+							else if(s.equals("String"))
+								__pstmt.setString(i, (String)ob);
+							
+							else if(s.equals("Character"))
+								__pstmt.setString(i, ob.toString());
+							
+							else
+								__pstmt.setString(i, ob.toString());
 							++i;
 						}
 					} catch(SQLException e){
