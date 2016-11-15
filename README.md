@@ -1,13 +1,6 @@
 # Shop
 Shop Application
 
-Database:
-- username: ii246,
-- password: ******,
-- SID: orcl,
-- hostname: 149.156.136.151,
-- port: 1521,
-
 -----------------------------------------------------------------------------
 
 To run this app, you need to get ojdbc6.jar file from site:
